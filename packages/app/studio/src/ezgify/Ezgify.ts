@@ -12,6 +12,9 @@ import {StudioService} from "@/service/StudioService"
 
 export type EzgifySong = { id: string, title: string }
 
+/** The Ezgify site this studio belongs to: https://ezgify.com for daw.ezgify.com. */
+export const EZGIFY_SITE = location.origin.replace("//daw.", "//")
+
 /** This edition's source code, offered to every user of it (AGPL-3.0, section 13). */
 export const EZGIFY_SOURCE_URL = "https://github.com/Deneshiqua/openDAW/tree/ezgify"
 

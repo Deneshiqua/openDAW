@@ -12,6 +12,7 @@ import {AudioData} from "@opendaw/lib-dsp"
 import {FooterItem} from "@/ui/FooterItem"
 import {EngineAddresses} from "@opendaw/studio-adapters"
 import {LatencyWarning} from "@/ui/LatencyWarning"
+import {EZGIFY_SOURCE_URL} from "@/ezgify/Ezgify"
 
 const className = Html.adoptStyleSheet(css, "footer")
 
@@ -195,6 +196,10 @@ export const Footer = ({lifecycle, service}: Construct) => {
             <div style={{flex: "1"}}/>
             <div style={{color: Colors.cream.toString()}}>
                 <LocalLink href="/privacy">Privacy</LocalLink> · <LocalLink href="/imprint">Imprint</LocalLink>
+                {" · "}
+                {/* This edition's source, offered to every user (AGPL-3.0, section 13). */}
+                <a href={EZGIFY_SOURCE_URL} target="_blank" rel="noopener" style={{color: "inherit"}}
+                   title="Bu openDAW sürümünün kaynak kodu (AGPL-3.0)">Kaynak kodu</a>
             </div>
         </footer>
     )

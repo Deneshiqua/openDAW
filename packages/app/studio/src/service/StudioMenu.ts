@@ -13,6 +13,9 @@ import {NeuralDemux} from "@/service/NeuralDemux.tsx"
 import {NextcloudDialogs} from "@/project/NextcloudDialogs"
 import {openManual} from "@/ui/manuals"
 
+// Ezgify edition: New, Open, Save as Template, Import and Join Live Room are hidden (songs come from Ezgify).
+const EZGIFY_ONLY = true
+
 export const populateStudioMenu = (service: StudioService) => {
     const Global = GlobalShortcuts
     return MenuItem.root()
@@ -25,11 +28,13 @@ export const populateStudioMenu = (service: StudioService) => {
                     }).setTriggerProcedure(() => service.closeProject()),
                     MenuItem.default({
                         label: "New",
-                        separatorBefore: true
+                        separatorBefore: true,
+                        hidden: EZGIFY_ONLY
                     }).setTriggerProcedure(() => service.newProject()),
                     MenuItem.default({
                         label: "Open...",
-                        shortcut: Global["project-open"].shortcut.format()
+                        shortcut: Global["project-open"].shortcut.format(),
+                        hidden: EZGIFY_ONLY
                     }).setTriggerProcedure(() => service.browseLocalProjects()),
                     MenuItem.default({
                         label: "Save",
@@ -43,9 +48,10 @@ export const populateStudioMenu = (service: StudioService) => {
                     }).setTriggerProcedure(() => service.projectProfileService.saveAs()),
                     MenuItem.default({
                         label: "Save as Template...",
-                        selectable: service.hasProfile
+                        selectable: service.hasProfile,
+                        hidden: EZGIFY_ONLY
                     }).setTriggerProcedure(() => service.projectProfileService.saveAsTemplate()),
-                    MenuItem.default({label: "Import", separatorBefore: true})
+                    MenuItem.default({label: "Import", separatorBefore: true, hidden: EZGIFY_ONLY})
                         .setRuntimeChildrenProcedure(parent => parent.addMenuItem(
                             MenuItem.default({label: "Audio Files..."})
                                 .setTriggerProcedure(() => service.sampleService.browse(true)),
@@ -93,7 +99,8 @@ export const populateStudioMenu = (service: StudioService) => {
                     MenuItem.default({
                         label: "Join Live Room...",
                         icon: IconSymbol.Connected,
-                        separatorBefore: true
+                        separatorBefore: true,
+                        hidden: EZGIFY_ONLY
                     }).setTriggerProcedure(() => connectRoom(service)),
                     MenuItem.default({
                         label: "Show MIDI-Keyboard",

@@ -46,6 +46,17 @@ export namespace Ezgify {
         } catch {/* storage blocked: only this page view knows the song */}
     }
 
+    /** This build is the Ezgify edition (boolean, not a literal: the code it turns off still type-checks). */
+    export const edition: boolean = true
+
+    /** Ezgify edition: projects come from Ezgify only (new, open, import and live rooms are off). */
+    export const onlyFromEzgify = (): void => {
+        RuntimeNotifier.info({
+            headline: "Ezgify Stüdyo",
+            message: "Bu stüdyoda sadece Ezgify'dan açılan şarkılar düzenlenir. Ezgify'da şarkının yanındaki “openDAW'da aç”ı kullan."
+        }).finally()
+    }
+
     const fail = (headline: string, error: unknown) =>
         RuntimeNotifier.info({headline, message: error instanceof Error ? error.message : String(error)})
 

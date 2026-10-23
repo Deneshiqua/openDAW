@@ -73,6 +73,7 @@ import {
     WasmBpmDetector
 } from "@opendaw/studio-core"
 import {ProjectDialogs} from "@/project/ProjectDialogs"
+import {Ezgify} from "@/ezgify/Ezgify"
 import {PresetService} from "@/ui/browse/PresetService"
 import {AudioFileBox, AudioUnitBox} from "@opendaw/studio-boxes"
 import {AudioUnitType} from "@opendaw/studio-enums"
@@ -188,6 +189,7 @@ export class StudioService implements ProjectEnv {
     panicEngine(): void {this.runIfProject(({engine}) => engine.panic())}
 
     async newProject() {
+        if (Ezgify.edition) {return Ezgify.onlyFromEzgify()}
         if (!await this.#projectProfileService.approveLosingChanges()) {return}
         this.#projectProfileService.setValue(Option.wrap(
             new ProjectProfile(UUID.generate(), Project.new(this), ProjectMeta.init("Untitled"), Option.None)))
@@ -196,6 +198,7 @@ export class StudioService implements ProjectEnv {
     async closeProject() {return this.#navigation.closeProject()}
 
     async browseLocalProjects(): Promise<void> {
+        if (Ezgify.edition) {return Ezgify.onlyFromEzgify()}
         const {status, value} = await Promises.tryCatch(ProjectDialogs.showBrowseDialog(this))
         if (status === "resolved") {
             const [uuid, meta] = value
@@ -204,7 +207,7 @@ export class StudioService implements ProjectEnv {
     }
 
     async exportBundle() {return this.#projectProfileService.exportBundle()}
-    async importBundle() {return this.#projectProfileService.importBundle()}
+    async importBundle() {return Ezgify.onlyFromEzgify()}
     async deleteProject(uuid: UUID.Bytes, meta: ProjectMeta): Promise<void> {
         if (this.#projectProfileService.getValue().ifSome(profile => UUID.equals(profile.uuid, uuid)) === true) {
             await this.closeProject()
@@ -264,6 +267,7 @@ export class StudioService implements ProjectEnv {
     }
 
     async importDawproject() {
+        if (Ezgify.edition) {return Ezgify.onlyFromEzgify()}
         (await DawProjectService.importDawproject(this.sampleService))
             .ifSome(skeleton => this.#projectProfileService
                 .setProject(Project.fromSkeleton(this, skeleton), "Dawproject"))
@@ -276,6 +280,7 @@ export class StudioService implements ProjectEnv {
     async importPreset() {await this.presets.loadBundleFromDisk()}
 
     async importStems(): Promise<void> {
+        if (Ezgify.edition) {return Ezgify.onlyFromEzgify()}
         const fileResult = await Promises.tryCatch(Files.open({types: [FilePickerAcceptTypes.ZipFileType]}))
         if (fileResult.status === "rejected") {return}
         const firstFile = fileResult.value.at(0)

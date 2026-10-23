@@ -15,14 +15,11 @@ import {ErrorsPage} from "@/ui/pages/ErrorsPage.tsx"
 import {ImprintPage} from "@/ui/pages/ImprintPage.tsx"
 import {GraphPage} from "@/ui/pages/GraphPage"
 import {CodeEditorPage} from "@/ui/pages/CodeEditorPage"
-import {OpenBundlePage} from "@/ui/pages/OpenBundlePage"
-import {OpenProjectPage} from "@/ui/pages/OpenProjectPage"
 import {EzgifyOpenPage} from "@/ui/pages/EzgifyOpenPage"
 import {DashboardPage} from "@/ui/pages/stats/DashboardPage"
 import {PrivacyPage} from "@/ui/pages/PrivacyPage"
 import {PreferencesPage} from "@/ui/pages/PreferencesPage"
 import {TestPage} from "@/ui/pages/TestPage"
-import {JoinRoomPage} from "@/ui/pages/JoinRoomPage"
 import {PerformancePage} from "@/ui/pages/PerformancePage"
 import {SampleReadPage} from "@/ui/pages/SampleReadPage"
 import {SpikeTestPage} from "@/ui/pages/SpikeTestPage"
@@ -68,14 +65,13 @@ export const App = (service: StudioService) => {
                             return DashboardPage(context)
                         }
                     },
-                    {path: "/open-bundle/*", factory: OpenBundlePage},
-                    {path: "/open-project", factory: OpenProjectPage},
+                    // Ezgify edition: other projects (bundles, shared links, live rooms) don't open here.
                     {path: "/ezgify/*", factory: EzgifyOpenPage},
                     {path: "/test", factory: TestPage},
                     {path: "/performance", factory: PerformancePage},
                     {path: "/performance/sample-read", factory: SampleReadPage},
                     {path: "/spike-test", factory: SpikeTestPage},
-                    {path: "/join/*", factory: JoinRoomPage}
+
                 ]}
             />
             <ChatOverlay lifecycle={terminator} service={service}/>

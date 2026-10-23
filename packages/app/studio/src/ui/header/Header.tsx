@@ -23,7 +23,7 @@ import {PerformanceStats} from "@/ui/header/PerformanceStats"
 import {BaseFrequencyControl} from "@/ui/header/BaseFrequencyControl"
 import {CaptureMidiButton} from "@/ui/header/CaptureMidiButton"
 import {TourAnchors} from "@/ui/tour/TourAnchors"
-import {Ezgify} from "@/ezgify/Ezgify"
+import {Ezgify, EZGIFY_SOURCE_URL} from "@/ezgify/Ezgify"
 
 const className = Html.adoptStyleSheet(css, "Header")
 
@@ -86,6 +86,8 @@ export const Header = ({lifecycle, service}: Construct) => {
             </MenuButton>
             {manuals}
             {ezgifySend}
+            <a className="ezgify-source" href={EZGIFY_SOURCE_URL} target="_blank" rel="noopener"
+               title="Bu openDAW sürümünün kaynak kodu (AGPL-3.0)">Kaynak kodu</a>
             <hr/>
             <Group onInit={element => StudioPreferences.catchupAndSubscribe(enabled =>
                 element.classList.toggle("hidden", !enabled), "visibility", "enable-history-buttons")}>

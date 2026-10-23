@@ -12,6 +12,9 @@ import {StudioService} from "@/service/StudioService"
 
 export type EzgifySong = { id: string, title: string }
 
+/** This edition's source code, offered to every user of it (AGPL-3.0, section 13). */
+export const EZGIFY_SOURCE_URL = "https://github.com/Deneshiqua/openDAW/tree/ezgify"
+
 const STORAGE_KEY = "ezgify-song"
 const API = "/__ezgify/api"
 

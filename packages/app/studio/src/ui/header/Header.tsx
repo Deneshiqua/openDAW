@@ -23,6 +23,7 @@ import {PerformanceStats} from "@/ui/header/PerformanceStats"
 import {BaseFrequencyControl} from "@/ui/header/BaseFrequencyControl"
 import {CaptureMidiButton} from "@/ui/header/CaptureMidiButton"
 import {TourAnchors} from "@/ui/tour/TourAnchors"
+import {Ezgify} from "@/ezgify/Ezgify"
 
 const className = Html.adoptStyleSheet(css, "Header")
 
@@ -64,6 +65,15 @@ export const Header = ({lifecycle, service}: Construct) => {
     const manuals: HTMLAnchorElement = (
         <a className="manuals" href="/manuals/" target="manuals" title="Manuals"><Icon symbol={IconSymbol.Help}/></a>
     )
+    // Ezgify: shown while the open project is a song opened from Ezgify.
+    const ezgifySend: HTMLButtonElement = (
+        <button className="ezgify-send" title="Düzenlediğin şarkıyı Ezgify'a gönder"
+                onclick={() => Ezgify.send(service)}>Ezgify'a gönder</button>
+    )
+    const updateEzgify = () => ezgifySend.classList.toggle("hidden",
+        Ezgify.song.getValue().isEmpty() || !service.hasProfile)
+    lifecycle.own(Ezgify.song.subscribe(updateEzgify))
+    lifecycle.own(service.projectProfileService.catchupAndSubscribe(updateEzgify))
     TourAnchors.register(lifecycle, manuals, "manuals")
     TourAnchors.register(lifecycle, transport, "transport")
     TourAnchors.register(lifecycle, timecodes, "timecodes")
@@ -75,6 +85,7 @@ export const Header = ({lifecycle, service}: Construct) => {
                 <h5>openDAW</h5>
             </MenuButton>
             {manuals}
+            {ezgifySend}
             <hr/>
             <Group onInit={element => StudioPreferences.catchupAndSubscribe(enabled =>
                 element.classList.toggle("hidden", !enabled), "visibility", "enable-history-buttons")}>

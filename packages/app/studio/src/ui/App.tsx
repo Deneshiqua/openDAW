@@ -17,6 +17,7 @@ import {GraphPage} from "@/ui/pages/GraphPage"
 import {CodeEditorPage} from "@/ui/pages/CodeEditorPage"
 import {OpenBundlePage} from "@/ui/pages/OpenBundlePage"
 import {OpenProjectPage} from "@/ui/pages/OpenProjectPage"
+import {EzgifyOpenPage} from "@/ui/pages/EzgifyOpenPage"
 import {DashboardPage} from "@/ui/pages/stats/DashboardPage"
 import {PrivacyPage} from "@/ui/pages/PrivacyPage"
 import {PreferencesPage} from "@/ui/pages/PreferencesPage"
@@ -69,6 +70,7 @@ export const App = (service: StudioService) => {
                     },
                     {path: "/open-bundle/*", factory: OpenBundlePage},
                     {path: "/open-project", factory: OpenProjectPage},
+                    {path: "/ezgify/*", factory: EzgifyOpenPage},
                     {path: "/test", factory: TestPage},
                     {path: "/performance", factory: PerformancePage},
                     {path: "/performance/sample-read", factory: SampleReadPage},

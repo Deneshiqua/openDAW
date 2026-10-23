@@ -42,7 +42,7 @@ import {FooterLabel} from "@/service/FooterLabel"
 import {PPQN} from "@opendaw/lib-dsp"
 import {AnimationFrame, Browser, ConsoleCommands, Dragging, Files} from "@opendaw/lib-dom"
 import {Promises} from "@opendaw/lib-runtime"
-import {ExportConfiguration, InstrumentFactories} from "@opendaw/studio-adapters"
+import {ExportConfiguration, InstrumentFactories, Validator} from "@opendaw/studio-adapters"
 import {Address} from "@opendaw/lib-box"
 import {
     AudioContentFactory,
@@ -349,6 +349,36 @@ export class StudioService implements ProjectEnv {
             })
         }
         dialog.terminate()
+    }
+
+    /**
+     * Ezgify: a new project named `name` with one Tape track per audio file, each from the start, at
+     * `bpm` when given (the song's tempo, so the grid matches). Used by the /ezgify/<song> page.
+     */
+    async openAudioTracks(name: string, bpm: Option<number>,
+                          files: ReadonlyArray<{ name: string, arrayBuffer: ArrayBuffer }>): Promise<void> {
+        this.#projectProfileService.setValue(Option.wrap(
+            new ProjectProfile(UUID.generate(), Project.new(this), ProjectMeta.init(name), Option.None)))
+        const {editing, boxGraph, api, timelineBox} = this.project
+        bpm.ifSome(value => editing.modify(() => timelineBox.bpm.setValue(Validator.clampBpm(value))))
+        for (const file of files) {
+            const sample = await this.#sampleService.importFile({name: file.name, arrayBuffer: file.arrayBuffer})
+            const uuid = UUID.parse(sample.uuid)
+            await Promises.tryCatch(this.sampleManager.getAudioData(uuid))
+            editing.modify(() => {
+                const {trackBox, instrumentBox} = api.createInstrument(InstrumentFactories.Tape)
+                instrumentBox.label.setValue(file.name)
+                const audioFileBox = boxGraph.findBox<AudioFileBox>(uuid)
+                    .unwrapOrElse(() => AudioFileBox.create(boxGraph, uuid, box => {
+                        box.fileName.setValue(file.name)
+                        box.startInSeconds.setValue(0)
+                        box.endInSeconds.setValue(sample.duration)
+                    }))
+                AudioContentFactory.createNotStretchedRegion({
+                    boxGraph, sample, audioFileBox, position: 0, targetTrack: trackBox
+                })
+            })
+        }
     }
 
     runIfProject<R>(procedure: Func<Project, R>): Option<R> {

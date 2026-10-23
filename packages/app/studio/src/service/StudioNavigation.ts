@@ -5,7 +5,7 @@ import {ProjectProfileService} from "@/service/ProjectProfileService"
 
 // Deep links that open a project are consumed: the back button must not land on them again and re-open it.
 // Every other page (script editor, graph, ...) stays reachable with the back button.
-const ConsumedRoutes: ReadonlyArray<string> = ["/open-bundle", "/open-project", "/join"]
+const ConsumedRoutes: ReadonlyArray<string> = ["/open-bundle", "/open-project", "/join", "/ezgify"]
 
 // The project profile is the single source of truth: project open ⇔ "/create" + a studio screen,
 // no project ⇔ "/" + dashboard. Other routes are plain pages and leave everything untouched.
